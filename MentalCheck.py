@@ -261,6 +261,46 @@ html, body, [class*="css"] {
     margin-top: 1.2rem;
 }
 
+/* ── Floating top nav bar (always visible, sidebar-independent) ── */
+.topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 0.6rem 1.2rem;
+    margin-bottom: 1.4rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.topnav-brand {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1b6ca8;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.topnav-links {
+    display: flex;
+    gap: 0.5rem;
+}
+.topnav-btn {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+.topnav-btn:hover { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+.topnav-btn.active { background: linear-gradient(135deg, #1b6ca8, #0a9396); color: white; border-color: transparent; }
+
 /* ── Streamlit overrides ── */
 .stButton > button {
     background: linear-gradient(135deg, #1b6ca8, #0a9396) !important;
@@ -278,17 +318,42 @@ html, body, [class*="css"] {
     transform: translateY(-1px) !important;
     box-shadow: 0 6px 20px rgba(27,108,168,0.45) !important;
 }
+/* Secondary (inactive nav) buttons */
+.stButton > button[kind="secondary"] {
+    background: #f8fafc !important;
+    color: #374151 !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+}
+.stButton > button[kind="secondary"]:hover {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border-color: #bfdbfe !important;
+    box-shadow: none !important;
+}
 div[data-testid="stSelectbox"] label,
 div[data-testid="stSlider"] label,
 div[data-testid="stNumberInput"] label { font-weight: 600 !important; font-size: 0.88rem !important; color: #374151 !important; }
 
 hr { border: none !important; border-top: 1px solid #e2e8f0 !important; margin: 1.8rem 0 !important; }
 
-/* ── Hide Streamlit default elements (keep sidebar toggle visible) ── */
+/* ── Hide Streamlit default elements ── */
 #MainMenu { visibility: hidden; }
 footer    { visibility: hidden; }
 [data-testid="stToolbar"]    { visibility: hidden; }
 [data-testid="stDecoration"] { display: none; }
+
+/* ── Force sidebar toggle always visible (Streamlit Cloud fix) ── */
+[data-testid="collapsedControl"] {
+    visibility: visible !important;
+    display: flex !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
+section[data-testid="stSidebarCollapsedControl"] {
+    visibility: visible !important;
+    display: block !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -444,6 +509,27 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TOP NAV BAR — always visible regardless of sidebar state
+# ══════════════════════════════════════════════════════════════════════════════
+_is_pred = st.session_state.active_page == 1
+
+
+# Streamlit buttons for actual navigation (invisible, triggered via JS workaround not needed)
+_tnav1, _tnav2, _tnav_spacer = st.columns([1.6, 1.6, 5])
+with _tnav1:
+    if st.button("📚 Penjelasan Variabel", use_container_width=True,
+                 type="secondary" if _is_pred else "primary"):
+        st.session_state.active_page = 0
+        st.rerun()
+with _tnav2:
+    if st.button("🔍 Prediksi Depresi", use_container_width=True,
+                 type="primary" if _is_pred else "secondary"):
+        st.session_state.active_page = 1
+        st.rerun()
+
+st.markdown("<div style='margin-bottom:0.5rem'></div>", unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 1 — PENJELASAN VARIABEL
