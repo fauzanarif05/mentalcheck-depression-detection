@@ -284,10 +284,11 @@ div[data-testid="stNumberInput"] label { font-weight: 600 !important; font-size:
 
 hr { border: none !important; border-top: 1px solid #e2e8f0 !important; margin: 1.8rem 0 !important; }
 
-/* ── Hide Streamlit default elements ── */
+/* ── Hide Streamlit default elements (keep sidebar toggle visible) ── */
 #MainMenu { visibility: hidden; }
 footer    { visibility: hidden; }
-header    { visibility: hidden; }
+[data-testid="stToolbar"]    { visibility: hidden; }
+[data-testid="stDecoration"] { display: none; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -412,22 +413,19 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("<p style='font-size:0.72rem; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; margin-bottom:0.6rem;'>NAVIGASI</p>", unsafe_allow_html=True)
 
-    # Use a separate state var — never set widget key directly after render
+    # Separate state var controls which page is active (0 or 1)
     if "active_page" not in st.session_state:
-        st.session_state.active_page = 0   # 0 = Penjelasan, 1 = Prediksi
+        st.session_state.active_page = 0
 
+    _pages = ["📚  Penjelasan Variabel", "🔍  Prediksi Depresi"]
     menu = st.radio(
         "Pilih halaman",
-        ["📚  Penjelasan Variabel", "🔍  Prediksi Depresi"],
-        label_visibility="collapsed",
+        _pages,
         index=st.session_state.active_page,
-        on_change=lambda: st.session_state.update(
-            active_page=["📚  Penjelasan Variabel", "🔍  Prediksi Depresi"].index(
-                st.session_state.nav_radio
-            )
-        ),
-        key="nav_radio",
+        label_visibility="collapsed",
     )
+    # Keep active_page in sync when user clicks the radio directly
+    st.session_state.active_page = _pages.index(menu)
 
     st.markdown("---")
     st.markdown("""
