@@ -1,0 +1,65 @@
+{
+    "numerical_features": [
+        "Age",
+        "Academic Pressure",
+        "CGPA",
+        "Study Satisfaction",
+        "Work/Study Hours",
+        "Financial Stress"
+    ],
+    "categorical_manual_mappings": {
+        "Family History of Mental Illness": {
+            "No": 0,
+            "Yes": 1
+        },
+        "Have you ever had suicidal thoughts ?": {
+            "Yes": 1,
+            "No": 0
+        },
+        "Gender": {
+            "Male": 0,
+            "Female": 1
+        }
+    },
+    "categorical_special_processing": {
+        "Profession": "is_student logic (1 if Student else 0)",
+        "Degree": "grouped into Degree_Category (High School, Bachelor, Master, Doctorate/Medical, Others)",
+        "Dietary Habits": "cleaned (/// -> Others)"
+    },
+    "one_hot_encoded_cols_base": [
+        "Dietary Habits",
+        "Sleep Duration",
+        "Degree_Category"
+    ],
+    "final_feature_order": [
+        "Age",
+        "Academic Pressure",
+        "CGPA",
+        "Study Satisfaction",
+        "Work/Study Hours",
+        "Financial Stress",
+        "Gender",
+        "Have you ever had suicidal thoughts ?",
+        "Family History of Mental Illness",
+        "is_student",
+        "Dietary Habits_Moderate",
+        "Dietary Habits_Others",
+        "Dietary Habits_Unhealthy",
+        "Sleep Duration_7-8 hours",
+        "Sleep Duration_Less than 5 hours",
+        "Sleep Duration_More than 8 hours",
+        "Sleep Duration_Others",
+        "Degree_Category_Doctorate/Medical",
+        "Degree_Category_High School",
+        "Degree_Category_Master",
+        "Degree_Category_Others"
+    ],
+    "preprocessing_steps": [
+        "Drop unused columns (id, City, Work Pressure, Job Satisfaction)",
+        "Handle Outliers/Cleaning (/// to Others)",
+        "Manual Binary Mapping (Gender, Suicidal, Family History)",
+        "Feature Engineering (Degree Grouping, is_student)",
+        "One-Hot Encoding (drop_first=True)",
+        "Feature Scaling (StandardScaler on numerical features)"
+    ]
+}
