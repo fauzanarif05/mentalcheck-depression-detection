@@ -412,10 +412,21 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("<p style='font-size:0.72rem; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; margin-bottom:0.6rem;'>NAVIGASI</p>", unsafe_allow_html=True)
 
+    # Use a separate state var — never set widget key directly after render
+    if "active_page" not in st.session_state:
+        st.session_state.active_page = 0   # 0 = Penjelasan, 1 = Prediksi
+
     menu = st.radio(
         "Pilih halaman",
         ["📚  Penjelasan Variabel", "🔍  Prediksi Depresi"],
         label_visibility="collapsed",
+        index=st.session_state.active_page,
+        on_change=lambda: st.session_state.update(
+            active_page=["📚  Penjelasan Variabel", "🔍  Prediksi Depresi"].index(
+                st.session_state.nav_radio
+            )
+        ),
+        key="nav_radio",
     )
 
     st.markdown("---")
@@ -449,6 +460,13 @@ if "Penjelasan" in menu:
       <p>Pelajari variabel yang digunakan model, cara kerjanya, dan seberapa baik performa prediksinya.</p>
     </div>
     """, unsafe_allow_html=True)
+
+    # CTA button → navigate to Prediksi page
+    col_btn, col_spacer = st.columns([1, 3])
+    with col_btn:
+        if st.button("🔍  Mulai Prediksi Sekarang", use_container_width=True):
+            st.session_state.active_page = 1
+            st.rerun()
 
     # ── Variable Descriptions ─────────────────────────────────────────────────
     st.markdown('<div class="section-title">📊 Variabel Numerik</div>', unsafe_allow_html=True)
