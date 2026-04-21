@@ -650,7 +650,7 @@ if "Penjelasan" in menu:
     # ── Model Performance ─────────────────────────────────────────────────────
     st.markdown("---")
     st.markdown('<div class="section-title">📈 Performa Model</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-sub">Model terbaik: <strong>Logistic Regression (Tuned)</strong> — dioptimalkan dengan Randomized Search Cross-Validation.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-sub">Model terbaik: <strong>Logistic Regression (Tuned)</strong> — dioptimalkan dengan Grid Search Cross-Validation.</div>', unsafe_allow_html=True)
 
     # Metric cards
     st.markdown("""
